@@ -12,9 +12,8 @@ const (
 	ParseModFile Property = "parse_mod_file"
 )
 
-func (g *golang) string() string {
-	segmentTemplate := g.language.props.getString(SegmentTemplate, "{{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}")
-	return g.language.string(segmentTemplate, g)
+func (g *golang) template() string {
+	return "{{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}"
 }
 
 func (g *golang) init(props Properties, env Environment) {

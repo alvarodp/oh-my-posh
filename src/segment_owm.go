@@ -50,18 +50,8 @@ func (d *owm) enabled() bool {
 	return err == nil
 }
 
-func (d *owm) string() string {
-	segmentTemplate := d.props.getString(SegmentTemplate, "{{.Weather}} ({{.Temperature}}{{.UnitIcon}})")
-	template := &textTemplate{
-		Template: segmentTemplate,
-		Context:  d,
-		Env:      d.env,
-	}
-	text, err := template.render()
-	if err != nil {
-		return err.Error()
-	}
-	return text
+func (d *owm) template() string {
+	return "{{ .Weather }} ({{ .Temperature }}{{ .UnitIcon }})"
 }
 
 func (d *owm) getResult() (*owmDataResponse, error) {

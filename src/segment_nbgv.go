@@ -21,6 +21,10 @@ type versionInfo struct {
 	SimpleVersion                string `json:"SimpleVersion"`
 }
 
+func (n *nbgv) template() string {
+	return "{{ .Version }}"
+}
+
 func (n *nbgv) enabled() bool {
 	nbgv := "nbgv"
 	if !n.env.hasCommand(nbgv) {
@@ -36,20 +40,6 @@ func (n *nbgv) enabled() bool {
 		return false
 	}
 	return n.nbgv.VersionFileFound
-}
-
-func (n *nbgv) string() string {
-	segmentTemplate := n.props.getString(SegmentTemplate, "{{ .Version }}")
-	template := &textTemplate{
-		Template: segmentTemplate,
-		Context:  n.nbgv,
-		Env:      n.env,
-	}
-	text, err := template.render()
-	if err != nil {
-		return err.Error()
-	}
-	return text
 }
 
 func (n *nbgv) init(props Properties, env Environment) {

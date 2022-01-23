@@ -45,6 +45,10 @@ type NightscoutData struct {
 	Mills      int64     `json:"mills"`
 }
 
+func (ns *nightscout) template() string {
+	return "{{ .Sgv }}"
+}
+
 func (ns *nightscout) enabled() bool {
 	data, err := ns.getResult()
 	if err != nil {
@@ -75,21 +79,6 @@ func (ns *nightscout) getTrendIcon() string {
 	default:
 		return ""
 	}
-}
-
-func (ns *nightscout) string() string {
-	segmentTemplate := ns.props.getString(SegmentTemplate, "{{.Sgv}}")
-	template := &textTemplate{
-		Template: segmentTemplate,
-		Context:  ns,
-		Env:      ns.env,
-	}
-	text, err := template.render()
-	if err != nil {
-		return err.Error()
-	}
-
-	return text
 }
 
 func (ns *nightscout) getResult() (*NightscoutData, error) {

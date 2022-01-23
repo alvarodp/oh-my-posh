@@ -16,6 +16,10 @@ const (
 	defaultUser = "default"
 )
 
+func (a *aws) template() string {
+	return "{{ .Profile }}{{ if .Region }}@{{ .Region }}{{ end }}"
+}
+
 func (a *aws) init(props Properties, env Environment) {
 	a.props = props
 	a.env = env
@@ -79,18 +83,4 @@ func (a *aws) getConfigFileInfo() {
 	if a.Profile == "" && a.Region != "" {
 		a.Profile = defaultUser
 	}
-}
-
-func (a *aws) string() string {
-	segmentTemplate := a.props.getString(SegmentTemplate, "{{.Profile}}{{if .Region}}@{{.Region}}{{end}}")
-	template := &textTemplate{
-		Template: segmentTemplate,
-		Context:  a,
-		Env:      a.env,
-	}
-	text, err := template.render()
-	if err != nil {
-		return err.Error()
-	}
-	return text
 }

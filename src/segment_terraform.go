@@ -6,18 +6,8 @@ type terraform struct {
 	WorkspaceName string
 }
 
-func (tf *terraform) string() string {
-	segmentTemplate := tf.props.getString(SegmentTemplate, "{{.WorkspaceName}}")
-	template := &textTemplate{
-		Template: segmentTemplate,
-		Context:  tf,
-		Env:      tf.env,
-	}
-	text, err := template.render()
-	if err != nil {
-		return err.Error()
-	}
-	return text
+func (tf *terraform) template() string {
+	return "{{ .WorkspaceName }}"
 }
 
 func (tf *terraform) init(props Properties, env Environment) {

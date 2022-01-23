@@ -17,9 +17,8 @@ const (
 	FetchPackageManager Property = "fetch_package_manager"
 )
 
-func (n *node) string() string {
-	segmentTemplate := n.language.props.getString(SegmentTemplate, "{{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }}")
-	return n.language.string(segmentTemplate, n)
+func (n *node) template() string {
+	return "{{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }}"
 }
 
 func (n *node) init(props Properties, env Environment) {

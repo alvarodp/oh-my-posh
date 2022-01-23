@@ -14,6 +14,10 @@ const (
 	MappedShellNames Property = "mapped_shell_names"
 )
 
+func (s *shell) template() string {
+	return "{{ .Name }}"
+}
+
 func (s *shell) enabled() bool {
 	mappedNames := s.props.getKeyValueMap(MappedShellNames, make(map[string]string))
 	s.Name = s.env.getShellName()
@@ -24,20 +28,6 @@ func (s *shell) enabled() bool {
 		}
 	}
 	return true
-}
-
-func (s *shell) string() string {
-	segmentTemplate := s.props.getString(SegmentTemplate, "{{.Name}}")
-	template := &textTemplate{
-		Template: segmentTemplate,
-		Context:  s,
-		Env:      s.env,
-	}
-	text, err := template.render()
-	if err != nil {
-		return err.Error()
-	}
-	return text
 }
 
 func (s *shell) init(props Properties, env Environment) {

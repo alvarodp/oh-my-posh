@@ -50,7 +50,7 @@ type Properties interface {
 // SegmentWriter is the interface used to define what and if to write to the prompt
 type SegmentWriter interface {
 	enabled() bool
-	string() string
+	template() string
 	init(props Properties, env Environment)
 }
 
@@ -156,7 +156,16 @@ const (
 )
 
 func (segment *Segment) string() string {
-	return segment.writer.string()
+	template := &textTemplate{
+		Template: segment.writer.template(),
+		Context:  segment.writer,
+		Env:      segment.env,
+	}
+	text, err := template.render()
+	if err != nil {
+		return err.Error()
+	}
+	return text
 }
 
 func (segment *Segment) enabled() bool {

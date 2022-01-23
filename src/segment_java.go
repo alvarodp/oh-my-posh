@@ -6,9 +6,8 @@ type java struct {
 	language
 }
 
-func (j *java) string() string {
-	segmentTemplate := j.language.props.getString(SegmentTemplate, "{{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}")
-	return j.language.string(segmentTemplate, j)
+func (j *java) template() string {
+	return "{{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}"
 }
 
 func (j *java) init(props Properties, env Environment) {

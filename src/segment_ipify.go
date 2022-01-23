@@ -10,6 +10,10 @@ const (
 	IpifyURL Property = "url"
 )
 
+func (i *ipify) template() string {
+	return "{{ .IP }}"
+}
+
 func (i *ipify) enabled() bool {
 	ip, err := i.getResult()
 	if err != nil {
@@ -18,21 +22,6 @@ func (i *ipify) enabled() bool {
 	i.IP = ip
 
 	return true
-}
-
-func (i *ipify) string() string {
-	segmentTemplate := i.props.getString(SegmentTemplate, "{{.IP}}")
-	template := &textTemplate{
-		Template: segmentTemplate,
-		Context:  i,
-		Env:      i.env,
-	}
-	text, err := template.render()
-	if err != nil {
-		return err.Error()
-	}
-
-	return text
 }
 
 func (i *ipify) getResult() (string, error) {

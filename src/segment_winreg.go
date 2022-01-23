@@ -19,6 +19,10 @@ const (
 	Fallback Property = "fallback"
 )
 
+func (wr *winreg) template() string {
+	return "{{ .Value }}"
+}
+
 func (wr *winreg) init(props Properties, env Environment) {
 	wr.props = props
 	wr.env = env
@@ -55,24 +59,6 @@ func (wr *winreg) enabled() bool {
 	}
 
 	return false
-}
-
-func (wr *winreg) string() string {
-	segmentTemplate := wr.props.getString(SegmentTemplate, "{{ .Value }}")
-	return wr.templateString(segmentTemplate)
-}
-
-func (wr *winreg) templateString(segmentTemplate string) string {
-	template := &textTemplate{
-		Template: segmentTemplate,
-		Context:  wr,
-		Env:      wr.env,
-	}
-	text, err := template.render()
-	if err != nil {
-		return err.Error()
-	}
-	return text
 }
 
 func (wr winreg) GetRegistryString(path string) (string, error) {

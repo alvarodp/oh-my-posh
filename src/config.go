@@ -247,7 +247,7 @@ func getDefaultConfig(info string) *Config {
 						Background:      "#ffffff",
 						Foreground:      "#111111",
 						Properties: properties{
-							TextProperty: info,
+							SegmentTemplate: info,
 						},
 					},
 					{

@@ -104,6 +104,10 @@ const (
 	BRANCHPREFIX = "ref: refs/heads/"
 )
 
+func (g *git) template() string {
+	return "{{ .HEAD }} {{ .BranchStatus }}{{ if .Working.Changed }} \uF044 {{ .Working.String }}{{ end }}{{ if .Staging.Changed }} \uF046 {{ .Staging.String }}{{ end }}" // nolint: lll
+}
+
 func (g *git) enabled() bool {
 	if !g.shouldDisplay() {
 		return false
@@ -185,11 +189,6 @@ func (g *git) shouldDisplay() bool {
 		return false
 	}
 	return false
-}
-
-func (g *git) string() string {
-	segmentTemplate := g.props.getString(SegmentTemplate, "{{ .HEAD }} {{ .BranchStatus }}{{ if .Working.Changed }} \uF044 {{ .Working.String }}{{ end }}{{ if .Staging.Changed }} \uF046 {{ .Staging.String }}{{ end }}") // nolint: lll
-	return g.templateString(segmentTemplate)
 }
 
 func (g *git) templateString(segmentTemplate string) string {

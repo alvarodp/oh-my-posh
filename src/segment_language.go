@@ -83,19 +83,6 @@ const (
 	LanguageExtensions Property = "extensions"
 )
 
-func (l *language) string(segmentTemplate string, context SegmentWriter) string {
-	template := &textTemplate{
-		Template: segmentTemplate,
-		Context:  context,
-		Env:      l.env,
-	}
-	text, err := template.render()
-	if err != nil {
-		return err.Error()
-	}
-	return text
-}
-
 func (l *language) enabled() bool {
 	// override default extensions if needed
 	l.extensions = l.props.getStringArray(LanguageExtensions, l.extensions)

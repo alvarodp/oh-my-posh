@@ -78,18 +78,8 @@ type AzurePowerShellSubscription struct {
 	} `json:"Environment"`
 }
 
-func (a *az) string() string {
-	segmentTemplate := a.props.getString(SegmentTemplate, "{{ .Name }}")
-	template := &textTemplate{
-		Template: segmentTemplate,
-		Context:  a,
-		Env:      a.env,
-	}
-	text, err := template.render()
-	if err != nil {
-		return err.Error()
-	}
-	return text
+func (a *az) template() string {
+	return "{{ .Name }}"
 }
 
 func (a *az) init(props Properties, env Environment) {

@@ -16,6 +16,10 @@ const (
 	Command Property = "command"
 )
 
+func (c *command) template() string {
+	return "{{ .Output }}"
+}
+
 func (c *command) enabled() bool {
 	shell := c.props.getString(ExecutableShell, "bash")
 	if !c.env.hasCommand(shell) {
@@ -43,20 +47,6 @@ func (c *command) enabled() bool {
 	}
 	c.Output = c.env.runShellCommand(shell, strings.TrimSpace(command))
 	return c.Output != ""
-}
-
-func (c *command) string() string {
-	segmentTemplate := c.props.getString(SegmentTemplate, "{{.Output}}")
-	template := &textTemplate{
-		Template: segmentTemplate,
-		Context:  c,
-		Env:      c.env,
-	}
-	text, err := template.render()
-	if err != nil {
-		return err.Error()
-	}
-	return text
 }
 
 func (c *command) init(props Properties, env Environment) {

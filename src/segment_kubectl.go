@@ -30,18 +30,8 @@ type KubeContext struct {
 	Namespace string `yaml:"namespace"`
 }
 
-func (k *kubectl) string() string {
-	segmentTemplate := k.props.getString(SegmentTemplate, "{{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}}")
-	template := &textTemplate{
-		Template: segmentTemplate,
-		Context:  k,
-		Env:      k.env,
-	}
-	text, err := template.render()
-	if err != nil {
-		return err.Error()
-	}
-	return text
+func (k *kubectl) template() string {
+	return "{{ .Context }}{{ if .Namespace }} :: {{ .Namespace }}{{ end }}"
 }
 
 func (k *kubectl) init(props Properties, env Environment) {

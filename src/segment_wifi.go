@@ -11,6 +11,10 @@ const (
 	defaultTemplate = "{{ if .Error }}{{ .Error }}{{ else }}\uFAA8 {{ .SSID }} {{ .Signal }}% {{ .ReceiveRate }}Mbps{{ end }}"
 )
 
+func (w *wifi) template() string {
+	return defaultTemplate
+}
+
 func (w *wifi) enabled() bool {
 	// This segment only supports Windows/WSL for now
 	if w.env.getPlatform() != windowsPlatform && !w.env.isWsl() {
@@ -27,21 +31,6 @@ func (w *wifi) enabled() bool {
 	}
 	w.wifiInfo = *wifiInfo
 	return true
-}
-
-func (w *wifi) string() string {
-	segmentTemplate := w.props.getString(SegmentTemplate, defaultTemplate)
-	template := &textTemplate{
-		Template: segmentTemplate,
-		Context:  w,
-		Env:      w.env,
-	}
-	text, err := template.render()
-	if err != nil {
-		return err.Error()
-	}
-
-	return text
 }
 
 func (w *wifi) init(props Properties, env Environment) {

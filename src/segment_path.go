@@ -54,6 +54,10 @@ const (
 	MaxDepth Property = "max_depth"
 )
 
+func (pt *path) template() string {
+	return "{{ .Path }}"
+}
+
 func (pt *path) enabled() bool {
 	pt.pwd = pt.env.pwd()
 	switch style := pt.props.getString(Style, Agnoster); style {
@@ -88,20 +92,6 @@ func (pt *path) enabled() bool {
 
 	pt.StackCount = pt.env.stackCount()
 	return true
-}
-
-func (pt *path) string() string {
-	segmentTemplate := pt.props.getString(SegmentTemplate, "{{ .Path }}")
-	template := &textTemplate{
-		Template: segmentTemplate,
-		Context:  pt,
-		Env:      pt.env,
-	}
-	text, err := template.render()
-	if err != nil {
-		return err.Error()
-	}
-	return text
 }
 
 func (pt *path) formatWindowsDrive(pwd string) string {

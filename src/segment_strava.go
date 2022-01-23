@@ -68,6 +68,10 @@ func (a *AuthError) Error() string {
 	return a.message
 }
 
+func (s *strava) template() string {
+	return "{{ if .Error }}{{ .Error }}{{ else }}{{ .Ago }}{{ end }}"
+}
+
 func (s *strava) enabled() bool {
 	data, err := s.getResult()
 	if err == nil {
@@ -75,6 +79,7 @@ func (s *strava) enabled() bool {
 		s.Icon = s.getActivityIcon()
 		s.Hours = s.getHours()
 		s.Ago = s.getAgo()
+		s.URL = fmt.Sprintf("https://www.strava.com/activities/%d", s.ID)
 		return true
 	}
 	if _, s.Authenticate = err.(*AuthError); s.Authenticate {
@@ -115,24 +120,6 @@ func (s *strava) getActivityIcon() string {
 		return s.props.getString(UnknownActivityIcon, "\ue213")
 	}
 	return s.props.getString(UnknownActivityIcon, "\ue213")
-}
-
-func (s *strava) string() string {
-	if s.Error != "" {
-		return s.Error
-	}
-	segmentTemplate := s.props.getString(SegmentTemplate, "{{ .Ago }}")
-	template := &textTemplate{
-		Template: segmentTemplate,
-		Context:  s,
-		Env:      s.env,
-	}
-	text, err := template.render()
-	if err != nil {
-		return err.Error()
-	}
-	s.URL = fmt.Sprintf("https://www.strava.com/activities/%d", s.ID)
-	return text
 }
 
 func (s *strava) getAccessToken() (string, error) {

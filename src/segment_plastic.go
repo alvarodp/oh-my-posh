@@ -39,6 +39,10 @@ func (p *plastic) init(props Properties, env Environment) {
 	p.env = env
 }
 
+func (p *plastic) template() string {
+	return "{{ .Selector }}"
+}
+
 func (p *plastic) enabled() bool {
 	if !p.env.hasCommand("cm") {
 		return false
@@ -60,20 +64,6 @@ func (p *plastic) enabled() bool {
 		p.setPlasticStatus()
 	}
 	return true
-}
-
-func (p *plastic) string() string {
-	segmentTemplate := p.props.getString(SegmentTemplate, "{{ .Selector }}")
-	template := &textTemplate{
-		Template: segmentTemplate,
-		Context:  p,
-		Env:      p.env,
-	}
-	text, err := template.render()
-	if err != nil {
-		return err.Error()
-	}
-	return text
 }
 
 func (p *plastic) setPlasticStatus() {

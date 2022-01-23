@@ -22,24 +22,13 @@ type wtData struct {
 	End              string   `json:"end"`
 }
 
+func (w *wakatime) template() string {
+	return "{{ secondsRound .CummulativeTotal.Seconds }}"
+}
+
 func (w *wakatime) enabled() bool {
 	err := w.setAPIData()
 	return err == nil
-}
-
-func (w *wakatime) string() string {
-	segmentTemplate := w.props.getString(SegmentTemplate, "{{ secondsRound .CummulativeTotal.Seconds }}")
-	template := &textTemplate{
-		Template: segmentTemplate,
-		Context:  w,
-		Env:      w.env,
-	}
-	text, err := template.render()
-	if err != nil {
-		return err.Error()
-	}
-
-	return text
 }
 
 func (w *wakatime) setAPIData() error {
